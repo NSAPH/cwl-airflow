@@ -39,7 +39,8 @@ class CWLStepOperator(BaseOperator):
             workflow=context["dag"].workflow,
             task_id=self.task_id,
             job_data=self.job_data,
-            cwl_args=context["dag"].default_args["cwl"]
+            cwl_args=context["dag"].default_args["cwl"],
+            remove_tmp_folder= False #context["ti"].get("keep")
         )
 
         return step_report

@@ -183,7 +183,10 @@ def get_version():
     Returns current version of the package if it's installed
     """
 
-    pkg = pkg_resources.require("cwl_airflow")
+    try:
+        pkg = pkg_resources.require("cwl_airflow")
+    except pkg_resources.DistributionNotFound:
+        pkg = None
     return pkg[0].version if pkg else "unknown version"
 
 
@@ -208,7 +211,7 @@ def get_md5_sum(location, block_size=2**20):
             __update_md5()
     except (FileNotFoundError, OSError) as err:
         with BytesIO(location.encode("utf-8")) as input_stream:
-            __update_md5() 
+            __update_md5()
 
     return md5_sum.hexdigest()
 
@@ -233,7 +236,7 @@ def load_yaml(location):
     except (FileNotFoundError, OSError):           # catch OSError raised when "filename too long"
         data = yaml.load(location)
     if data == location:
-        raise ValueError
+        raise ValueError("Invalid location=" + location)
     return data
 
 
